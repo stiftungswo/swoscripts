@@ -5,7 +5,7 @@
 	<key>Label</key>
 	<string>ch.stiftungswo.firefox.profile</string>
 	<key>Program</key>
-	<string>/Applications/Firefox\ Profile\ Sync.app/Contents/MacOS/Firefox\ Profile\ Sync</string>
+	<string>/Applications/Firefox Profile Sync.app/Contents/MacOS/Firefox Profile Sync</string>
 	<key>RunAtLoad</key>
 	<true/>
 </dict>
