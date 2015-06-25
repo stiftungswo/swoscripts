@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
-set -e
+if [ $1 == "-v" ]; then
+	set -ex
+else
+	set -e
+fi
 #Script to Copy a Firefox Profile from a NFS userhome to a local disk
 #Designed for osx but with aditional coding can be ported to other *nix Systems
 
 RSYNC="/usr/bin/rsync"
 LOCALPROFILEROOT="/Users/Shared/FirefoxProfiles"
 NFSPROFILEROOT="${HOME}/Library/Application Support/Firefox/Profiles"
-PROFILENAME="Default-local"
+PROFILENAME="${LOGNAME}-local"
 TMPFILE="/tmp/firefox-profile.isLoggedin"
+RSYNCOPTIONS="-a --delete --exclude=cache2 --exclude=Cache --exclude=lock"
+if [ $1 == "-v" ]; then
+	RSYNCOPTIONS="-v $RSYNCOPTIONS"
+fi
 
 if [ ! -d ${LOCALPROFILEROOT} ]; then
 	mkdir ${LOCALPROFILEROOT}
@@ -15,13 +23,13 @@ fi
 
 onLogin() {
 	if [ -d "${NFSPROFILEROOT}/${PROFILENAME}" ]; then
-		${RSYNC} -a --delete --exclude=cache2 --exclude=Cache --exclude=lock "${NFSPROFILEROOT}/${PROFILENAME}" "${LOCALPROFILEROOT}"
+		${RSYNC} ${RSYNCOPTIONS} "${NFSPROFILEROOT}/${PROFILENAME}" "${LOCALPROFILEROOT}"
 	fi
 }
 
 onLogout() {
 	if [ -d "${LOCALPROFILEROOT}/${PROFILENAME}" ]; then
-		${RSYNC} -a --delete --exclude=cache2  --exclude=Cache --exclude=lock "${LOCALPROFILEROOT}/${PROFILENAME}" "${NFSPROFILEROOT}"
+		${RSYNC} ${RSYNCOPTIONS} "${LOCALPROFILEROOT}/${PROFILENAME}" "${NFSPROFILEROOT}"
 	fi
 }
 
